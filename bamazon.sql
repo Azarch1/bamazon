@@ -16,10 +16,10 @@ INSERT INTO products
     (item_id,product_name,department_name,price,stock_quantity)
 VALUES
     (1001,'37 inch Samsung Smart tv','electronics',300,14),
-    (1002,'Smart watch','electronics', 70, 32),
+    (1002,'Smart watch','electronics', 70, 42),
     (1003,'Iphone 6s','electronics', 270, 7),
     (1004,'Beats Headphones','electronics', 220, 17),
-    (1005,'Smart watch Ascended','electronics', 170, 32),
+    (1005,'Smart watch Ascended','electronics', 170, 24),
     (1006,'40lb dumbells','fitness', 40, 32),
     (1007,'30lb dumbells','fitness', 30, 32),
     (1008,'25lb dumbells','fitness', 25, 32),
