@@ -19,8 +19,8 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
   if (err) throw err;
   // run the start function after the connection is made to prompt the user
-  start();
   console.log ("------Welcome to Bamazon Shoppers!------");
+  start(); 
 });
 
  
@@ -29,17 +29,25 @@ function start() {
   connection.query("SELECT * FROM products", function(err, results) {
     if (err) throw err;
     console.log(results);
+    productPrompt()
   })
 }
-console.log("----------------------------------------------------------")
 
 // Selecting ITEM ID'S.
+function productPrompt() {
 inquirer
   .prompt([
     {
-      type: "input",
+      type: "number",
       name: "id",
-      message: "What is the ID of the product you would like to buy?"
+      message: "What is the ID of the product you would like to buy?"},
+    validate : function(validNum) {
+      if(isNaN(validNum) === false) {
+        return true;
+      }
+
+    console.log("Please select a valid number")
+      return false;
     },
   {
     type: "input",
@@ -48,11 +56,13 @@ inquirer
   }
 ])
 .then(function(answer) {
-  var custProduct = answer.id - 1;
+  var custProduct = answer.id ;
   var itemQuantity = parseInt(answer.qty);
-  var total = parseFloat(
-    (res[custProduct].price * itemQuantity).toFixed(2)
-  );
+  connection.query("SELECT stock_quantity FROM products WHERE item_id =" + answer.id, function (err,quantity) {
+    console.log(quantity)
+  } )
+
+
 
   // CHECKING TO ENSURE THERE IS ENOUGH OF THE SELECTED ITEM IN STOCK.
   if (res[custProduct].stock_quantity >= prodQuantity) {
@@ -79,10 +89,10 @@ inquirer
   } else {
     console.log("Insufficient quantity");
     reRun();
-  }
-    });
+      }
   });
 }
+
 
 // CONFIRM IF CUSTOMER WANTS TO PURCHASE ANOTHER ORDER
 function reRun() {
