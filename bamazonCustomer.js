@@ -37,9 +37,9 @@ function start() {
 function productPrompt() {
 inquirer
   .prompt([
-    {
-      type: "number",
-      name: "id",
+    
+      {type: "number",
+      name: "productid",
       message: "What is the ID of the product you would like to buy?"},
     validate : function(validNum) {
       if(isNaN(validNum) === false) {
