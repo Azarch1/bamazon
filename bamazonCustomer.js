@@ -37,30 +37,35 @@ function start() {
 function productPrompt() {
 inquirer
   .prompt([
-    
-      {type: "number",
-      name: "productid",
-      message: "What is the ID of the product you would like to buy?"},
-    validate : function(validNum) {
-      if(isNaN(validNum) === false) {
-        return true;
-      }
+      {
+        type: "number",
+        name: "productid",
+        message: "What is the ID of the product you would like to buy?",
+        validate : function(validNum) {
+          if(isNaN(validNum) === false) {
+            return true;
+          }
 
-    console.log("Please select a valid number")
-      return false;
+        console.log("Please select a valid number")
+        return false;
+      }
     },
   {
     type: "input",
     name: "quantity",
-    message: "How many units of this product would you like to buy?"
+    validate : function(validNum) {
+      if(isNaN(validNum) === false) {
+        return true;
+      }
   }
+}
 ])
 .then(function(answer) {
   var custProduct = answer.id ;
   var itemQuantity = parseInt(answer.qty);
   connection.query("SELECT stock_quantity FROM products WHERE item_id =" + answer.id, function (err,quantity) {
     console.log(quantity)
-  } )
+  })
 
 
 
