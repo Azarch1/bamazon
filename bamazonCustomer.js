@@ -51,7 +51,7 @@ inquirer
       }
     },
   {
-    type: "input",
+    type: "number",
     name: "quantity",
     validate : function(validNum) {
       if(isNaN(validNum) === false) {
@@ -61,30 +61,26 @@ inquirer
 }
 ])
 .then(function(answer) {
-  var custProduct = answer.id ;
-  var itemQuantity = parseInt(answer.qty);
-  connection.query("SELECT stock_quantity FROM products WHERE item_id =" + answer.id, function (err,quantity) {
-    console.log(quantity)
-  })
-
-
-
+  var custProduct = answer.productid ;
+  var itemQuantity = parseInt(answer.quantity);
+  connection.query("SELECT stock_quantity, price FROM products WHERE item_id =" + custProduct, function (err,res) {
   // CHECKING TO ENSURE THERE IS ENOUGH OF THE SELECTED ITEM IN STOCK.
-  if (res[custProduct].stock_quantity >= prodQuantity) {
+  if (res[0].stock_quantity >= itemQuantity) {
 
     // UPDATE DATABASE TO REFLECT TRANSACTION
     connection.query(
       "UPDATE products SET ? WHERE ?",
       [
         {
-          stock_quantity: res[custProduct].stock_quantity - itemQuantity
+          stock_quantity: res[0].stock_quantity - itemQuantity
         },
         {
-          item_id: answer.id
+          item_id: custProduct
         }
       ],
-      function(err, res) {
+      function(err, response) {
         if (err) throw err;
+         var total = res[0].price * itemQuantity
         console.log(
           "Your total is $" + total + ". Thanks for your order!"
         );
@@ -93,9 +89,12 @@ inquirer
     );
   } else {
     console.log("Insufficient quantity");
+    
     reRun();
       }
+    })
   });
+
 }
 
 
@@ -111,7 +110,7 @@ function reRun() {
     ])
     .then(function(answer) {
       if (answer.reply) {
-        runBamazon();
+        start();
       } else {
         console.log("Thanks for visiting BAMAZON!");
       }
